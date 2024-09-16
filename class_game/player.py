@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.position
 
     #deplacement du joueur 
-    def mouve(self, x, y):
+    def move(self, x, y):
         # Déplacement du joueur (modifie sa position)
         self.position[0] += x
         self.position[1] += y
