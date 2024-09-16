@@ -13,7 +13,7 @@ BLACK = (0, 0, 0)
 class Game:
     def __init__(self):
         # Initialisation de la fenêtre de jeu  
-        self.screen = pygame.display.set_mode((900, 1000))
+        self.screen = pygame.display.set_mode((0,0) ,pygame.FULLSCREEN)
         pygame.display.set_caption("Orami Adventure")
         pygame.mouse.set_visible(False)
 
@@ -22,6 +22,11 @@ class Game:
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 3
+        self.wall = []
+
+        for obj in tmx_data.objects:
+            if obj.type == "collision":
+                self.wall.append(pygame.Rect(obj.x,obj.y,obj.width,obj.heigt))
 
         # Gérer le joueur
         player_position = tmx_data.get_object_by_name("player")
@@ -40,12 +45,16 @@ class Game:
         else:
             self.player.vitesse = 2
         if pressed[pygame.K_UP]  or pressed[pygame.K_z]:
+            self.player.changeAnimation("up")
             self.player.move(0, -self.player.vitesse)
         if pressed[pygame.K_DOWN]  or pressed[pygame.K_s]:
+            self.player.changeAnimation("down")
             self.player.move(0, self.player.vitesse)
         if pressed[pygame.K_LEFT]  or pressed[pygame.K_q]:
+            self.player.changeAnimation("left")
             self.player.move(-self.player.vitesse, 0)
         if pressed[pygame.K_RIGHT]  or pressed[pygame.K_d]:
+            self.player.changeAnimation("right")
             self.player.move(self.player.vitesse, 0)
         if pressed[pygame.K_ESCAPE]:
             self.running = True
@@ -62,14 +71,18 @@ class Game:
             # Déplacement horizontal
             if abs(axis_x) > threshold:
                 if (axis_x)<0:
+                    self.player.changeAnimation("left")
                     self.player.move(-1 * self.player.vitesse, 0)
                 else :
+                    self.player.changeAnimation("right")
                     self.player.move(1 * self.player.vitesse, 0)
             # Déplacement vertical
             if abs(axis_y) > threshold:
                 if (axis_y)<0:
+                    self.player.changeAnimation("up")
                     self.player.move(0,-1 * self.player.vitesse)
                 else :
+                    self.player.changeAnimation("down")
                     self.player.move( 0,1 * self.player.vitesse)
             
 

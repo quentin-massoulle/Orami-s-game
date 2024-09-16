@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="4">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="25">
  <tileset firstgid="1" source="nature.tsx"/>
  <objectgroup id="3" name="Object">
   <object id="1" name="player" x="50.6667" y="778.667">
    <point/>
   </object>
+  <object id="4" x="-1.33333" y="-2.66667" width="962.667" height="30.6667"/>
+  <object id="5" name="mur" type="collision" x="921.333" y="-2.66667" width="40" height="641.333"/>
+  <object id="6" name="mur" type="collision" x="-1.33333" y="4" width="930.667" height="29.3333"/>
+  <object id="7" name="mur" type="collision" x="-4" y="-2.66667" width="34.6667" height="640"/>
+  <object id="8" name="mur" type="collision" x="-2.66667" y="736" width="33.3333" height="225.333"/>
+  <object id="9" name="mur" type="collision" x="2.66667" y="933.333" width="954.667" height="25.3333"/>
+  <object id="10" name="mur" type="collision" x="922.667" y="737.333" width="37.3333" height="214.667"/>
+  <object id="12" name="finZone" type="collision" x="-4" y="641.333" width="12" height="92"/>
+  <object id="13" name="finZone" type="collision" x="944" y="641.333" width="16" height="93.3333"/>
+  <object id="17" type="collision" x="208" y="145.333" width="64" height="61.3333"/>
+  <object id="18" type="collision" x="466.667" y="177.333" width="58" height="60"/>
+  <object id="19" type="collision" x="434" y="467.333" width="58" height="56"/>
+  <object id="20" type="collision" x="104" y="466" width="74" height="62"/>
+  <object id="21" type="collision" x="208" y="140" width="60" height="68"/>
+  <object id="22" type="collision" x="784" y="142" width="62" height="60"/>
+  <object id="23" type="collision" x="726" y="460" width="56" height="74"/>
  </objectgroup>
  <layer id="4" name="chemin" width="30" height="30">
   <data encoding="csv">
