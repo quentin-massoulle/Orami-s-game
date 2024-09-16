@@ -13,7 +13,7 @@ BLACK = (0, 0, 0)
 class Game:
     def __init__(self):
         # Initialisation de la fenêtre de jeu  
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((900, 1000))
         pygame.display.set_caption("Orami Adventure")
         pygame.mouse.set_visible(False)
 
@@ -50,6 +50,28 @@ class Game:
         if pressed[pygame.K_ESCAPE]:
             self.running = True
             self.playing = False
+        if (self.joystick):
+            axis_x = self.joystick.get_axis(0)  # Axe gauche/droite (X)
+            axis_y = self.joystick.get_axis(1)  # Axe haut/bas (Y)
+            if self.joystick.get_button(0):
+                self.player.vitesse = 3.5
+            else:
+                self.player.vitesse = 2
+            threshold = 0.2  # Seuil pour ignorer les petites déviations
+
+            # Déplacement horizontal
+            if abs(axis_x) > threshold:
+                if (axis_x)<0:
+                    self.player.move(-1 * self.player.vitesse, 0)
+                else :
+                    self.player.move(1 * self.player.vitesse, 0)
+            # Déplacement vertical
+            if abs(axis_y) > threshold:
+                if (axis_y)<0:
+                    self.player.move(0,-1 * self.player.vitesse)
+                else :
+                    self.player.move( 0,1 * self.player.vitesse)
+            
 
 
     def mannetteConect(self):
@@ -57,10 +79,8 @@ class Game:
         if pygame.joystick.get_count() > 0:
             self.joystick = pygame.joystick.Joystick(0)
             self.joystick.init()
-            print(f"Manette connectée : {self.joystick.get_name()}")
         else:
             self.joystick = None
-            print("Pas de manette connectée")
 
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
@@ -98,8 +118,7 @@ class Game:
 
     def run(self):
         clock = pygame.time.Clock()  # Pour gérer le taux de rafraîchissement
-        running = True
-
+        self.mannetteConect()
         while self.running:
             if not self.playing:
                 self.display_menu()
