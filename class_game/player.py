@@ -34,8 +34,6 @@ class Player(pygame.sprite.Sprite):
         self.feet.midbottom = self.rect.midbottom
 
     def save_location(self):
-        print("Type of self.position:", type(self.position))  # Affiche le type de self.position
-        print("Type of self.old_position:", type(self.old_position))  # Affiche le type de self.old_position 
         self.old_position = self.position.copy()  # Copier la liste
 
     def move(self, x, y):

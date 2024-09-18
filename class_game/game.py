@@ -33,90 +33,69 @@ class Game:
         # Gérer le joueur
         player_position = tmx_data.get_object_by_name("player")
         self.player = Player(player_position.x, player_position.y)  # Instancier le joueur
-        self.collition=False
         self.running = True
         self.playing = False
 
-        # gere les colition
 
-        self.last_collision_time = 0
-        self.collision_cooldown = 0.4
         # Dessiner le groupe de calques
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
         self.group.add(self.player)
     
-    # Vérifier les collisions avec les murs
-    def collide_with_walls(self, rect):
-        for wall in self.walls:
-            if rect.colliderect(wall):
-                return True
-        return False
     
     # Récupérer les touches appuyées et déplacer le joueur
     def handle_input(self):
-        # Vérifier si le délai de collision est écoulé
-        current_time = time.time()
-        if (current_time - self.last_collision_time) >= self.collision_cooldown:
-            self.collision = False
+        pressed = pygame.key.get_pressed()
+        vx, vy = 0, 0
 
-        if not self.collision:
-            pressed = pygame.key.get_pressed()
-            vx, vy = 0, 0
+        if pressed[pygame.K_LSHIFT]:
+            self.player.vitesse = 3.5
+        else:
+            self.player.vitesse = 2
 
-            if pressed[pygame.K_LSHIFT]:
+        if pressed[pygame.K_UP] or pressed[pygame.K_z]:
+            self.player.changeAnimation("up")
+            vy = -self.player.vitesse
+        if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
+            self.player.changeAnimation("down")
+            vy = self.player.vitesse
+        if pressed[pygame.K_LEFT] or pressed[pygame.K_q]:
+            self.player.changeAnimation("left")
+            vx = -self.player.vitesse
+        if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
+            self.player.changeAnimation("right")
+            vx = self.player.vitesse
+        if pressed[pygame.K_ESCAPE]:
+            self.playing = False
+        # Déplacement en deux étapes (horizontal puis vertical)
+        self.move_player(vx,vy)
+
+        # Gérer les entrées de la manette si elle est connectée
+        if self.joystick is not None:
+            axis_x = self.joystick.get_axis(0)  # Axe gauche/droite (X)
+            axis_y = self.joystick.get_axis(1)  # Axe haut/bas (Y)
+            if self.joystick.get_button(0):
                 self.player.vitesse = 3.5
             else:
                 self.player.vitesse = 2
+            threshold = 0.2  # Seuil pour ignorer les petites déviations
 
-            if pressed[pygame.K_UP] or pressed[pygame.K_z]:
-                self.player.changeAnimation("up")
-                vy = -self.player.vitesse
-            if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
-                self.player.changeAnimation("down")
-                vy = self.player.vitesse
-            if pressed[pygame.K_LEFT] or pressed[pygame.K_q]:
-                self.player.changeAnimation("left")
-                vx = -self.player.vitesse
-            if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
-                self.player.changeAnimation("right")
-                vx = self.player.vitesse
-            if pressed[pygame.K_ESCAPE]:
-                self.running = False
-                self.playing = False
-            # Déplacement en deux étapes (horizontal puis vertical)
-            self.move_player(vx,vy)
-
-            # Gérer les entrées de la manette si elle est connectée
-            if self.joystick is not None:
-                axis_x = self.joystick.get_axis(0)  # Axe gauche/droite (X)
-                axis_y = self.joystick.get_axis(1)  # Axe haut/bas (Y)
-                if self.joystick.get_button(0):
-                    self.player.vitesse = 3.5
+            # Déplacement horizontal
+            if abs(axis_x) > threshold:
+                vx = axis_x * self.player.vitesse
+                if axis_x < 0:
+                    self.player.changeAnimation("left")
                 else:
-                    self.player.vitesse = 2
-                threshold = 0.2  # Seuil pour ignorer les petites déviations
+                    self.player.changeAnimation("right")
+            
+            # Déplacement vertical
+            if abs(axis_y) > threshold:
+                vy = axis_y * self.player.vitesse
+                if axis_y < 0:
+                    self.player.changeAnimation("up")
+                else:
+                    self.player.changeAnimation("down")
 
-                # Déplacement horizontal
-                if abs(axis_x) > threshold:
-                    vx = axis_x * self.player.vitesse
-                    if axis_x < 0:
-                        self.player.changeAnimation("left")
-                    else:
-                        self.player.changeAnimation("right")
-                
-                # Déplacement vertical
-                if abs(axis_y) > threshold:
-                    vy = axis_y * self.player.vitesse
-                    if axis_y < 0:
-                        self.player.changeAnimation("up")
-                    else:
-                        self.player.changeAnimation("down")
-
-                self.move_player(vx,vy)
-        else:
-            # Attendre que le délai de collision soit écoulé avant de permettre le mouvement
-            if (current_time - self.last_collision_time) >= self.collision_cooldown:
-                self.collision = False
+            self.move_player(vx,vy)
 
     def move_player(self,x,y):
        self.player.position=[self.player.position[0]+x,self.player.position[1]+y]
