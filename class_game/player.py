@@ -18,15 +18,26 @@ class Player(pygame.sprite.Sprite):
         self.last_update = 0
         self.animation_speed = 100
         self.rect = self.image.get_rect()  # Récupérer le rectangle de l'image
-        self.feet= pygame.Rect(0,0,self.rect.width*0.5, 12 )
+        self.feet = pygame.Rect(0, 0, self.rect.width * 0.5, 12)
         self.animation_index = 0
-        self.position = [x, y]
+        self.position = [x, y]  # Assurez-vous que c'est une liste
+        self.old_position = self.position.copy()  # Copier la liste
         self.vitesse = 2
 
     def update(self):
         self.rect.topleft = self.position
+        self.feet.midbottom = self.rect.midbottom
 
-    # Déplacement du joueur
+    def move_back(self):
+        self.position = self.old_position.copy()  # Copier pour éviter les modifications involontaires
+        self.rect.topleft = self.position
+        self.feet.midbottom = self.rect.midbottom
+
+    def save_location(self):
+        print("Type of self.position:", type(self.position))  # Affiche le type de self.position
+        print("Type of self.old_position:", type(self.old_position))  # Affiche le type de self.old_position 
+        self.old_position = self.position.copy()  # Copier la liste
+
     def move(self, x, y):
         # Modifier la position du joueur
         self.position[0] += x
@@ -51,7 +62,6 @@ class Player(pygame.sprite.Sprite):
             if self.animation_index >= len(self.images[direction]):
                 self.animation_index = 0
 
- 
     def get_image(self, x, y):
         # Découpe l'image du sprite sheet
         image = pygame.Surface([32, 32], pygame.SRCALPHA)  # Surface avec transparence

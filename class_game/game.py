@@ -119,11 +119,15 @@ class Game:
                 self.collision = False
 
     def move_player(self,x,y):
-       self.player.position=(self.player.position[0]+x,self.player.position[1]+y)
+       self.player.position=[self.player.position[0]+x,self.player.position[1]+y]
 
     def update(self):
-        # Placeholder pour la logique de mise à jour si nécessaire
-        pass
+       
+       self.group.update()
+
+       for sprite in self.group.sprites():
+           if sprite.feet.collidelist(self.walls) >-1:
+               sprite.move_back()
 
     def mannetteConect(self):
         pygame.joystick.init()
@@ -173,8 +177,9 @@ class Game:
                 self.display_menu()
 
             while self.playing:
+                self.player.save_location()
                 self.handle_input()
-                self.group.update()
+                self.update()
                 self.group.center(self.player.rect.center)  # Centrer la caméra sur le joueur
                 self.group.draw(self.screen)
                 # Gérer les événements
