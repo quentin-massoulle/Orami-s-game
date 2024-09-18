@@ -1,0 +1,53 @@
+[33mcommit eada3cd02639fb39269c19524f227d68e4420c21[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Mon Sep 16 14:15:21 2024 +0200
+
+    Gestion collision
+
+[33mcommit f424f20ad8c78412b8b1e70eed4b97b3102239a4[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Mon Sep 16 14:03:13 2024 +0200
+
+    ajoue animation
+
+[33mcommit 6ccb4b583cdd32658e4bacb08105a80dbefde936[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Mon Sep 16 12:57:37 2024 +0200
+
+    implementation comande manette
+
+[33mcommit 5d98e231d962d554e5dc1d2b7b2983940c7d56e9[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Mon Sep 16 11:50:43 2024 +0200
+
+    ajoue du menue de depart
+
+[33mcommit 69a7ef8b66871f23c29649088e987a60814285b7[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Mon Sep 16 09:54:21 2024 +0200
+
+    ajoue deplacemetn joueur
+
+[33mcommit 6f092878082f6fbdd44fa4f0972fcfb6bf6ceb3c[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Wed Sep 11 10:11:59 2024 +0200
+
+    creation classe player
+
+[33mcommit 9ba732a8ba448382e8a57b88a6271bb7ac16782f[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Tue Sep 10 13:03:21 2024 +0200
+
+    creation de a classe game et impementation de la carte
+
+[33mcommit d7d5049ce50229106a50ef2201fb46a51eb9d0b5[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Tue Sep 10 12:29:31 2024 +0200
+
+    creation de la classe game
+
+[33mcommit 5de25573320fe32a436f9f701d8182a45949e305[m
+Author: quentin-massoulle <quentin.massoulle@etud.u-picardie.fr>
+Date:   Tue Sep 10 12:24:07 2024 +0200
+
+    creation de la map 1 et de l'initialisation de pygame

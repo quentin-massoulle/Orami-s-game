@@ -15,9 +15,11 @@ class Player(pygame.sprite.Sprite):
             "right": [self.get_image(0, 64), self.get_image(32, 64), self.get_image(64, 64)],
             "up": [self.get_image(0, 96), self.get_image(32, 96), self.get_image(64, 96)]
         }
+        self.last_update = 0
+        self.animation_speed = 100
+        self.rect = self.image.get_rect()  # Récupérer le rectangle de l'image
         self.feet= pygame.Rect(0,0,self.rect.width*0.5, 12 )
         self.animation_index = 0
-        self.rect = self.image.get_rect()  # Récupérer le rectangle de l'image
         self.position = [x, y]
         self.vitesse = 2
 
@@ -31,16 +33,25 @@ class Player(pygame.sprite.Sprite):
         self.position[1] += y
 
     def changeAnimation(self, direction):
-        # Obtenir l'image correcte en fonction de la direction et de l'animation courante
-        self.image = self.images[direction][self.animation_index]
-        
-        # Incrémenter l'index de l'animation
-        self.animation_index += 1
-        
-        # Remettre à zéro l'animation si elle atteint la fin de la liste
-        if self.animation_index >= len(self.images[direction]):
-            self.animation_index = 0
+        # Obtenir le temps actuel
+        current_time = pygame.time.get_ticks()
 
+        # Vérifier si suffisamment de temps s'est écoulé depuis la dernière animation
+        if current_time - self.last_update > self.animation_speed:
+            # Mettre à jour l'heure de la dernière animation
+            self.last_update = current_time
+            
+            # Obtenir l'image correcte en fonction de la direction et de l'animation courante
+            self.image = self.images[direction][self.animation_index]
+            
+            # Incrémenter l'index de l'animation
+            self.animation_index += 1
+            
+            # Remettre à zéro l'animation si elle atteint la fin de la liste
+            if self.animation_index >= len(self.images[direction]):
+                self.animation_index = 0
+
+ 
     def get_image(self, x, y):
         # Découpe l'image du sprite sheet
         image = pygame.Surface([32, 32], pygame.SRCALPHA)  # Surface avec transparence
