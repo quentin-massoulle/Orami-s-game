@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="44">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="45">
  <tileset firstgid="1" source="nature.tsx"/>
  <layer id="4" name="chemin" width="30" height="30">
   <data encoding="csv">
@@ -114,7 +114,7 @@
   <object id="9" name="mur" type="collision" x="2.66667" y="928.333" width="954.667" height="30.3333"/>
   <object id="10" name="mur" type="collision" x="927.167" y="737.333" width="32.8333" height="220.167"/>
   <object id="12" name="finZone" type="collision" x="0" y="640.333" width="12" height="96.5"/>
-  <object id="13" name="finZone" type="collision" x="944" y="641.333" width="16" height="93.3333"/>
+  <object id="13" name="map2" type="Map" x="942" y="640.333" width="16" height="93.3333"/>
   <object id="17" type="collision" x="208" y="145.333" width="64" height="61.3333"/>
   <object id="18" type="collision" x="466.667" y="177.333" width="58" height="60"/>
   <object id="19" type="collision" x="434" y="467.333" width="58" height="56"/>

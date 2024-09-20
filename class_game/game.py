@@ -30,6 +30,15 @@ class Game:
             if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
 
+        self.Map= []
+
+        for obj in tmx_data.objects:
+            if obj.type == "Map":
+                 self.Map.append({
+                    'rect': pygame.Rect(obj.x, obj.y, obj.width, obj.height),
+                    'name': obj.name
+                })
+        
         # Gérer le joueur
         player_position = tmx_data.get_object_by_name("player")
         self.player = Player(player_position.x, player_position.y)  # Instancier le joueur
@@ -67,7 +76,7 @@ class Game:
         if pressed[pygame.K_ESCAPE]:
             self.playing = False
         # Déplacement en deux étapes (horizontal puis vertical)
-        self.move_player(vx,vy)
+        self.player.move(vx,vy)
 
         # Gérer les entrées de la manette si elle est connectée
         if self.joystick is not None:
@@ -95,16 +104,10 @@ class Game:
                 else:
                     self.player.changeAnimation("down")
 
-            self.move_player(vx,vy)
+            self.player.move(vx,vy)
 
     
-    def update(self):
-       
-       self.group.update()
-
-       for sprite in self.group.sprites():
-           if sprite.feet.collidelist(self.walls) >-1:
-               sprite.move_back()
+         
     #verifie er connecte si une mannette est connecter 
     def mannetteConect(self):
         pygame.joystick.init()
@@ -144,6 +147,55 @@ class Game:
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
+    
+
+    def changementMap(self, map):
+        # Vider les anciens objets (sprites, murs, etc.)
+        self.group.empty()  # Vider le groupe de sprites
+        self.walls.clear()  # Vider les murs de collision
+        self.Map.clear()  # Vider les murs de collision
+    
+        # Effacer l'écran pour éviter de garder des artefacts visuels
+        self.screen.fill((0, 0, 0))  # Remplir l'écran de noir pour tout effacer
+        pygame.display.flip()  # Mettre à jour l'affichage
+        
+        # Chargement de la nouvelle carte avec pytmx et pyscroll
+        tmx_data = pytmx.util_pygame.load_pygame("map/" + map + ".tmx")  # Chargement du fichier .tmx
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
+        map_layer.zoom = 3  # Zoomer sur la carte
+        
+        # Récupérer les objets de collision de la carte
+        self.walls = []  # Réinitialiser les murs de collision
+        for obj in tmx_data.objects:
+            if obj.type == "collision":
+                self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))  # Ajouter les rectangles de collision
+        
+        # Récupérer la position du joueur
+        player_position = tmx_data.get_object_by_name("player")  # Obtenir l'objet nommé "player" dans la carte .tmx
+        self.player = Player(player_position.x, player_position.y)  # Instancier le joueur à sa position dans la carte
+        
+        # Redessiner la nouvelle carte et le joueur
+        self.map_layer = map_layer  # Mettre à jour la carte actuelle avec le nouveau rendu
+        self.group.add(self.player)  # Ajouter le joueur au groupe de sprites
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
+
+
+    def update(self):
+       
+       self.group.update()
+
+       for sprite in self.group.sprites():
+            if sprite.feet.collidelist(self.walls) >-1:
+               sprite.move_back()
+            for obj in self.Map:
+                if sprite.feet.colliderect(obj['rect']):  # Si collision avec un objet de la carte
+                    print(obj['name'] )
+                    NewMap = obj['name'] # Chargement d'une nouvelle carte en fonction de l'objet
+                    self.changementMap(NewMap)
+            break 
+
+
     #mise en route du jeux 
     def run(self):
         clock = pygame.time.Clock()  # Pour gérer le taux de rafraîchissement
