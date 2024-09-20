@@ -97,9 +97,7 @@ class Game:
 
             self.move_player(vx,vy)
 
-    def move_player(self,x,y):
-       self.player.position=[self.player.position[0]+x,self.player.position[1]+y]
-
+    
     def update(self):
        
        self.group.update()
@@ -107,7 +105,7 @@ class Game:
        for sprite in self.group.sprites():
            if sprite.feet.collidelist(self.walls) >-1:
                sprite.move_back()
-
+    #verifie er connecte si une mannette est connecter 
     def mannetteConect(self):
         pygame.joystick.init()
         if pygame.joystick.get_count() > 0:
@@ -115,7 +113,7 @@ class Game:
             self.joystick.init()
         else:
             self.joystick = None
-
+    #creation du menue de demarage 
     def display_menu(self):
         """Affiche le menu principal"""
         menu_open = True
@@ -146,7 +144,7 @@ class Game:
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
-
+    #mise en route du jeux 
     def run(self):
         clock = pygame.time.Clock()  # Pour gérer le taux de rafraîchissement
         self.mannetteConect()
