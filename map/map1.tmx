@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="45">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="47">
  <tileset firstgid="1" source="nature.tsx"/>
  <layer id="4" name="chemin" width="30" height="30">
   <data encoding="csv">
@@ -135,5 +135,8 @@
   <object id="41" type="collision" x="192.417" y="608.5" width="31.3333" height="25.1667"/>
   <object id="42" type="collision" x="36" y="609" width="28" height="24.6667"/>
   <object id="43" x="-1060.61" y="296.97"/>
+  <object id="45" name="player_map2" x="916" y="678">
+   <point/>
+  </object>
  </objectgroup>
 </map>

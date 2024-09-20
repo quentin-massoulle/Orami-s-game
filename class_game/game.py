@@ -11,19 +11,31 @@ pygame.init()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+
+# Police d'écriture
+font = pygame.font.SysFont('Arial', 30)
+
+# Fonction pour afficher du texte au centre de l'écran
+
 class Game:
     def __init__(self):
         # Initialisation de la fenêtre de jeu  
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         pygame.display.set_caption("Orami Adventure")
         pygame.mouse.set_visible(False)
-
+        self.width, self.height = self.screen.get_size()
         # Chargement de la carte
         tmx_data = pytmx.util_pygame.load_pygame('map/map1.tmx')  # Assurez-vous que le chemin est correct
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 3
         self.walls = []
+        self.map_accutuelle="map1"
 
         # Récupérer les objets de collision de la carte
         for obj in tmx_data.objects:
@@ -36,7 +48,7 @@ class Game:
             if obj.type == "Map":
                  self.Map.append({
                     'rect': pygame.Rect(obj.x, obj.y, obj.width, obj.height),
-                    'name': obj.name
+                    'name': obj.name,
                 })
         
         # Gérer le joueur
@@ -147,16 +159,45 @@ class Game:
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
-    
+
+
+    def loading_screen(self,screen):
+        loading = True
+        progress = 0
+        while loading:
+            screen.fill(BLACK)
+            
+            # Texte de chargement
+
+            # Appeler draw_text avec les coordonnées centrées
+            self.draw_text("Chargement en cours...", 60, WHITE, screen.get_width() // 2, 200)
+            
+            # Barre de progression (rectangles)
+            pygame.draw.rect(screen, RED, [600, self.height // 2, 500, 30], 2)  # Bordure
+            pygame.draw.rect(screen, GREEN, [600, self.height // 2, 5 * progress, 30])  # Barre de remplissage
+
+            pygame.display.flip()
+
+            # Simuler le chargement
+            time.sleep(0.01)  # On peut ajuster la durée ici
+            progress += 1
+            
+            if progress >= 100:
+                loading = False
+
+            # Gestion des événements pour fermer la fenêtre
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
 
     def changementMap(self, map):
         # Vider les anciens objets (sprites, murs, etc.)
         self.group.empty()  # Vider le groupe de sprites
         self.walls.clear()  # Vider les murs de collision
         self.Map.clear()  # Vider les objets "Map"
-        
-        # Effacer l'écran pour éviter de garder des artefacts visuels
         self.screen.fill((0, 0, 0))  # Remplir l'écran de noir pour tout effacer
+        self.loading_screen(self.screen)
+        # Effacer l'écran pour éviter de garder des artefacts visuels
         pygame.display.flip()  # Mettre à jour l'affichage
             
         # Chargement de la nouvelle carte avec pytmx et pyscroll
@@ -164,14 +205,25 @@ class Game:
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 3  # Zoomer sur la carte
-            
+        
+
+        
+        for obj in tmx_data.objects:
+            if obj.type == "Map":
+                    self.Map.append({
+                    'rect': pygame.Rect(obj.x, obj.y, obj.width, obj.height),
+                    'name': obj.name,
+                })
+                    
+        
         # Récupérer les objets de collision de la carte
         for obj in tmx_data.objects:
             if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))  # Ajouter les rectangles de collision
             
         # Récupérer la position du joueur sur la nouvelle carte
-        player_position = tmx_data.get_object_by_name("player")  # Obtenir l'objet nommé "player" dans la carte .tmx
+        player_position = tmx_data.get_object_by_name("player_"+self.map_accutuelle)  # Obtenir l'objet nommé "player" dans la carte .tmx
+        self.map_accutuelle=map
      
         self.player.position[0]=player_position.x
         self.player.position[1]=player_position.y
