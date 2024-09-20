@@ -153,32 +153,36 @@ class Game:
         # Vider les anciens objets (sprites, murs, etc.)
         self.group.empty()  # Vider le groupe de sprites
         self.walls.clear()  # Vider les murs de collision
-        self.Map.clear()  # Vider les murs de collision
-    
+        self.Map.clear()  # Vider les objets "Map"
+        
         # Effacer l'écran pour éviter de garder des artefacts visuels
         self.screen.fill((0, 0, 0))  # Remplir l'écran de noir pour tout effacer
         pygame.display.flip()  # Mettre à jour l'affichage
-        
+            
         # Chargement de la nouvelle carte avec pytmx et pyscroll
         tmx_data = pytmx.util_pygame.load_pygame("map/" + map + ".tmx")  # Chargement du fichier .tmx
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 3  # Zoomer sur la carte
-        
+            
         # Récupérer les objets de collision de la carte
-        self.walls = []  # Réinitialiser les murs de collision
         for obj in tmx_data.objects:
             if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))  # Ajouter les rectangles de collision
-        
-        # Récupérer la position du joueur
+            
+        # Récupérer la position du joueur sur la nouvelle carte
         player_position = tmx_data.get_object_by_name("player")  # Obtenir l'objet nommé "player" dans la carte .tmx
-        self.player = Player(player_position.x, player_position.y)  # Instancier le joueur à sa position dans la carte
+     
+        self.player.position[0]=player_position.x
+        self.player.position[1]=player_position.y
+
+        self.player.old_position=self.player.position
+        # Mettre à jour la carte actuelle avec le nouveau rendu
+        self.map_layer = map_layer
         
-        # Redessiner la nouvelle carte et le joueur
-        self.map_layer = map_layer  # Mettre à jour la carte actuelle avec le nouveau rendu
-        self.group.add(self.player)  # Ajouter le joueur au groupe de sprites
+        # Ne recréez pas `self.group` ici. Ajoutez juste le joueur au groupe existant
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
+        self.group.add(self.player)  # Ajouter le joueur au groupe de sprites
 
 
     def update(self):
@@ -194,7 +198,7 @@ class Game:
                     NewMap = obj['name'] # Chargement d'une nouvelle carte en fonction de l'objet
                     self.changementMap(NewMap)
             break 
-
+        
 
     #mise en route du jeux 
     def run(self):
