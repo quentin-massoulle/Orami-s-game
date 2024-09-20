@@ -3,7 +3,9 @@ import pygame
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+
+    
+    def __init__(self, x, y):#  inisialise le joueur avec cordonner x et y pour le placement sur la map au lancement 
         super().__init__()
         self.sprite_sheet = pygame.image.load("player_creature_asset/Player.png").convert_alpha()  # Chargement de l'image avec transparence
         self.image = self.get_image(0, 0)  # Récupérer la première image du sprite
@@ -20,27 +22,33 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()  # Récupérer le rectangle de l'image
         self.feet = pygame.Rect(0, 0, self.rect.width * 0.5, 12)
         self.animation_index = 0
-        self.position = [x, y]  # Assurez-vous que c'est une liste
-        self.old_position = self.position.copy()  # Copier la liste
-        self.vitesse = 2
+        self.position = [x, y]  # position du joueur 
+        self.old_position = self.position.copy()  # ancienne position du joueur 
+        self.vitesse = 2 #vitesse du joueur 
 
+    #update du deplacement du sprite joueur 
     def update(self):
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
 
+    #retour en arrierre sur le deplacement du joueur  
     def move_back(self):
         self.position = self.old_position.copy()  # Copier pour éviter les modifications involontaires
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
 
+    #sauvegarde la possition du joeur si retour en arriere neccessaire lors de collition
     def save_location(self):
         self.old_position = self.position.copy()  # Copier la liste
 
+    #deplacemen du joueur 
     def move(self, x, y):
         # Modifier la position du joueur
         self.position[0] += x
         self.position[1] += y
 
+
+    #change les animation du joeur en fonction de la direction du deplacement 
     def changeAnimation(self, direction):
         # Obtenir le temps actuel
         current_time = pygame.time.get_ticks()
@@ -59,7 +67,7 @@ class Player(pygame.sprite.Sprite):
             # Remettre à zéro l'animation si elle atteint la fin de la liste
             if self.animation_index >= len(self.images[direction]):
                 self.animation_index = 0
-
+    #revoie l'image du joueur 
     def get_image(self, x, y):
         # Découpe l'image du sprite sheet
         image = pygame.Surface([32, 32], pygame.SRCALPHA)  # Surface avec transparence
