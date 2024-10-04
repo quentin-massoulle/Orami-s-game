@@ -1,5 +1,6 @@
 from typing import Any
 import pygame
+import time
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
@@ -11,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.get_image(0, 0)  # Récupérer la première image du sprite
         self.PV=100
         self.VieMax=100
+        self.last_touched_time = 0 
 
         # Dictionnaire contenant les animations pour chaque direction
         self.images = {
@@ -28,6 +30,11 @@ class Player(pygame.sprite.Sprite):
         self.old_position = self.position.copy()  # ancienne position du joueur 
         self.vitesse = 2 #vitesse du joueur 
 
+
+    def __del__(self):
+        print(f"L'objet {self.name} a été détruit")
+
+
     #update du deplacement du sprite joueur 
     def update(self):
         self.rect.topleft = self.position
@@ -42,6 +49,14 @@ class Player(pygame.sprite.Sprite):
     #sauvegarde la possition du joeur si retour en arriere neccessaire lors de collition
     def save_location(self):
         self.old_position = self.position.copy()  # Copier la liste
+    
+    def EnemyTouched(self, enemy):
+        current_time = time.time()  # Récupère le temps actuel en secondes (temps Unix)
+        
+        # Si plus d'une seconde s'est écoulée depuis la dernière exécution, on autorise l'appel
+        if current_time - self.last_touched_time >= 1:
+            self.PV -= enemy.dammage
+            self.last_touched_time = current_time
 
     #deplacemen du joueur 
     def move(self, x, y):

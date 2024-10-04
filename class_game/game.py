@@ -3,7 +3,7 @@ import pytmx
 import pyscroll
 import time
 from class_game.player import Player  # Importer la classe Player depuis le dossier class_game
-
+from class_game.Ennemy import Ennemy  # Importer la classe Player depuis le dossier class_game
 # Initialisation de Pygame
 pygame.init()
 
@@ -40,6 +40,7 @@ class Game:
         self.barreVie_y=20 
         self.emplacementBarre_X = 10
         self.emplacementBarre_Y = 10
+        self.ennemy = Ennemy()
         # Récupérer les objets de collision de la carte
         for obj in tmx_data.objects:
             if obj.type == "collision":
@@ -90,6 +91,8 @@ class Game:
             vx = self.player.vitesse
         if pressed[pygame.K_ESCAPE]:
             self.playing = False
+        if pressed[pygame.K_SPACE]:
+            self.player.EnemyTouched(self.ennemy)
         # Déplacement en deux étapes (horizontal puis vertical)
         self.player.move(vx,vy)
 
@@ -152,6 +155,7 @@ class Game:
                     if event.key == pygame.K_RETURN:  # Touche Enter pour commencer
                         self.playing = True
                         menu_open = False
+                        self.player = Player(self.player_position.x, self.player_position.y)
                     elif event.key == pygame.K_ESCAPE:  # Touche Esc pour quitter
                         self.running = False
                         menu_open = False
@@ -267,11 +271,13 @@ class Game:
         clock = pygame.time.Clock()  # Pour gérer le taux de rafraîchissement
         self.mannetteConect()
 
+
         while self.running:
             if not self.playing:
                 self.display_menu()
 
             while self.playing:
+            
                 self.player.save_location()
                 self.handle_input()
                 self.update()
@@ -287,7 +293,10 @@ class Game:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.running = False
-
+                if self.player.PV <= 0:
+                    self.group.remove(self.player)  # Supprime le joueur du groupe de sprites
+                    self.playing = False
+                    del self.player
                 pygame.display.flip()  # Rafraîchir l'écran avec flip()
                 clock.tick(60)  # Limiter le jeu à 60 FPS
 
