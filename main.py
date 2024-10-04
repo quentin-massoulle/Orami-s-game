@@ -5,3 +5,5 @@ if __name__ == '__main__':
     pygame.init()
     game_instance = Game()  # Instancier la classe Game
     game_instance.run()      # Lancer la boucle du jeu
+
+    

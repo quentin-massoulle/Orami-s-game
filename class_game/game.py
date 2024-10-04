@@ -56,15 +56,14 @@ class Game:
                 })
         
         # Gérer le joueur
-        player_position = tmx_data.get_object_by_name("player")
-        self.player = Player(player_position.x, player_position.y)  # Instancier le joueur
+        self.player_position_Spone = tmx_data.get_object_by_name("player")
         self.running = True
         self.playing = False
+        self.player = Player(self.player_position_Spone.x, self.player_position_Spone.y)
 
 
         # Dessiner le groupe de calques
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
-        self.group.add(self.player)
     
     
     # Récupérer les touches appuyées et déplacer le joueur
@@ -155,7 +154,8 @@ class Game:
                     if event.key == pygame.K_RETURN:  # Touche Enter pour commencer
                         self.playing = True
                         menu_open = False
-                        self.player = Player(self.player_position.x, self.player_position.y)
+                        self.player = Player(self.player_position_Spone.x, self.player_position_Spone.y)
+                        self.group.add(self.player)
                     elif event.key == pygame.K_ESCAPE:  # Touche Esc pour quitter
                         self.running = False
                         menu_open = False
@@ -229,11 +229,11 @@ class Game:
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))  # Ajouter les rectangles de collision
             
         # Récupérer la position du joueur sur la nouvelle carte
-        player_position = tmx_data.get_object_by_name("player_"+self.map_accutuelle)  # Obtenir l'objet nommé "player" dans la carte .tmx
+        self.player_position_Spone = tmx_data.get_object_by_name("player_"+self.map_accutuelle)  # Obtenir l'objet nommé "player" dans la carte .tmx
         self.map_accutuelle=map
      
-        self.player.position[0]=player_position.x
-        self.player.position[1]=player_position.y
+        self.player.position[0]=self.player_position_Spone.x
+        self.player.position[1]=self.player_position_Spone.y
 
         self.player.old_position=self.player.position
         # Mettre à jour la carte actuelle avec le nouveau rendu
