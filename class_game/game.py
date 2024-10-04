@@ -36,7 +36,10 @@ class Game:
         map_layer.zoom = 3
         self.walls = []
         self.map_accutuelle="map1"
-
+        self.barreVie_X=200
+        self.barreVie_y=20 
+        self.emplacementBarre_X = 10
+        self.emplacementBarre_Y = 10
         # Récupérer les objets de collision de la carte
         for obj in tmx_data.objects:
             if obj.type == "collision":
@@ -237,10 +240,16 @@ class Game:
         self.group.add(self.player)  # Ajouter le joueur au groupe de sprites
 
 
+    def dessiner_barre_vie(self, player):
+        proportion_vie = player.PV / player.VieMax
+        largeur_actuelle = int(proportion_vie * self.barreVie_X)
+        # Dessine une barre rouge pour le fond (vie perdue)
+        pygame.draw.rect(self.screen, RED, (self.emplacementBarre_X, self.emplacementBarre_Y, self.barreVie_X, self.barreVie_y))
+        # Dessine une barre verte par-dessus (vie restante)
+        pygame.draw.rect(self.screen, GREEN,(self.emplacementBarre_X, self.emplacementBarre_Y, largeur_actuelle, self.barreVie_y))
     def update(self):
        
        self.group.update()
-
        for sprite in self.group.sprites():
             if sprite.feet.collidelist(self.walls) >-1:
                sprite.move_back()
@@ -250,6 +259,7 @@ class Game:
                     NewMap = obj['name'] # Chargement d'une nouvelle carte en fonction de l'objet
                     self.changementMap(NewMap)
             break 
+       
         
 
     #mise en route du jeux 
@@ -266,7 +276,13 @@ class Game:
                 self.handle_input()
                 self.update()
                 self.group.center(self.player.rect.center)  # Centrer la caméra sur le joueur
+
+                # Dessiner la carte et les sprites
                 self.group.draw(self.screen)
+
+                # Dessiner la barre de vie par-dessus tous les autres éléments
+                self.dessiner_barre_vie(self.player)
+
                 # Gérer les événements
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -276,3 +292,4 @@ class Game:
                 clock.tick(60)  # Limiter le jeu à 60 FPS
 
         pygame.quit()
+
