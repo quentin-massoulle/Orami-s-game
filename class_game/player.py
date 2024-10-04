@@ -9,6 +9,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.sprite_sheet = pygame.image.load("player_creature_asset/Player.png").convert_alpha()  # Chargement de l'image avec transparence
         self.image = self.get_image(0, 0)  # Récupérer la première image du sprite
+        self.PV=100
+        self.VieMax=100
 
         # Dictionnaire contenant les animations pour chaque direction
         self.images = {
