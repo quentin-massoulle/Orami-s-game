@@ -36,7 +36,6 @@ class Game:
         map_layer.zoom = 3
         self.walls = []
         self.map_accutuelle="map1"
-        self.barreVie_X=200
         self.barreVie_y=20 
         self.emplacementBarre_X = 10
         self.emplacementBarre_Y = 10
@@ -71,10 +70,12 @@ class Game:
         pressed = pygame.key.get_pressed()
         vx, vy = 0, 0
 
-        if pressed[pygame.K_LSHIFT]:
+        if ((pressed[pygame.K_LSHIFT] )& (self.player.Endurance > 0.1) & (self.player.EnduranceVide == False)):
             self.player.vitesse = 3.5
+            self.player.Run()
         else:
             self.player.vitesse = 2
+            self.player.RegenEndurance()
 
         if pressed[pygame.K_UP] or pressed[pygame.K_z]:
             self.player.changeAnimation("up")
@@ -145,6 +146,7 @@ class Game:
             self.draw_text("Appuyez sur ESC pour Quitter", 40, WHITE, self.screen.get_width() // 2, 500)
 
             pygame.display.flip()
+            self.group.empty() 
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -246,11 +248,22 @@ class Game:
 
     def dessiner_barre_vie(self, player):
         proportion_vie = player.PV / player.VieMax
-        largeur_actuelle = int(proportion_vie * self.barreVie_X)
+        largeur_actuelle = int(proportion_vie * self.player.VieMax)
         # Dessine une barre rouge pour le fond (vie perdue)
-        pygame.draw.rect(self.screen, RED, (self.emplacementBarre_X, self.emplacementBarre_Y, self.barreVie_X, self.barreVie_y))
+        pygame.draw.rect(self.screen, BLACK, (self.emplacementBarre_X, self.emplacementBarre_Y,  self.player.VieMax, self.barreVie_y))
         # Dessine une barre verte par-dessus (vie restante)
-        pygame.draw.rect(self.screen, GREEN,(self.emplacementBarre_X, self.emplacementBarre_Y, largeur_actuelle, self.barreVie_y))
+        pygame.draw.rect(self.screen, RED,(self.emplacementBarre_X, self.emplacementBarre_Y, largeur_actuelle, self.barreVie_y))
+    
+    def dessiner_barre_endurance(self, player):
+        proportion_Endurance = player.Endurance / player.EnduranceMax
+        largeur_actuelle = int(proportion_Endurance * self.player.EnduranceMax)
+        # Dessine une barre rouge pour le fond (vie perdue)
+        pygame.draw.rect(self.screen, BLACK, (self.emplacementBarre_X, self.emplacementBarre_Y+30, self.player.EnduranceMax, self.barreVie_y))
+        # Dessine une barre verte par-dessus (vie restante)
+        pygame.draw.rect(self.screen, GREEN,(self.emplacementBarre_X, self.emplacementBarre_Y+30, largeur_actuelle, self.barreVie_y))
+    
+
+
     def update(self):
        
        self.group.update()
@@ -288,6 +301,7 @@ class Game:
 
                 # Dessiner la barre de vie par-dessus tous les autres éléments
                 self.dessiner_barre_vie(self.player)
+                self.dessiner_barre_endurance(self.player)
 
                 # Gérer les événements
                 for event in pygame.event.get():

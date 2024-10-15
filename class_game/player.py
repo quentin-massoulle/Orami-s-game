@@ -13,8 +13,10 @@ class Player(pygame.sprite.Sprite):
         self.PV=100
         self.VieMax=100
         self.Endurance=100
-        self.VieEndurance=100
+        self.EnduranceMax=100
+        self.EnduranceVide=False
         self.last_touched_time = 0 
+        self.Last_run = 0
 
         # Dictionnaire contenant les animations pour chaque direction
         self.images = {
@@ -31,11 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.position = [x, y]  # position du joueur 
         self.old_position = self.position.copy()  # ancienne position du joueur 
         self.vitesse = 2 #vitesse du joueur 
-
-
     def __del__(self):
-        print(f"L'objet {self.name} a été détruit")
-
+        print("__del__")
 
     #update du deplacement du sprite joueur 
     def update(self):
@@ -59,6 +58,20 @@ class Player(pygame.sprite.Sprite):
         if current_time - self.last_touched_time >= 1:
             self.PV -= enemy.dammage
             self.last_touched_time = current_time
+    
+    def Run(self):
+        current_time = time.time()
+        if current_time - self.last_touched_time >= 1:
+            self.Endurance -= 0.5
+            print (self.Endurance)
+            if self.Endurance == 0:
+                self.EnduranceVide = True
+    def RegenEndurance(self):
+        if self.Endurance < self.EnduranceMax:
+            self.Endurance += 1
+            if self.Endurance >=  self.EnduranceMax/2:
+                self.EnduranceVide = False
+
 
     #deplacemen du joueur 
     def move(self, x, y):
