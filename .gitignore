@@ -1,2 +1,23 @@
+# Ignorer les fichiers Python compilés
+__pycache__/
+*.py[cod]
+
+# Ignorer les environnements virtuels
 myenv/
-./__pycache__/
+venv/
+.env/
+*.env
+
+# Ignorer les fichiers de configuration ou temporaires
+*.log
+*.sqlite3
+*.tmp
+*.bak
+
+# Ignorer les fichiers ou dossiers de ressources temporaires
+player_creature_asset/
+tiset/
+map/
+
+# Ignorer tout autre fichier temporaire créé par git
+.gitignore
