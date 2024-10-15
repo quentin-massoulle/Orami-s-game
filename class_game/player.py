@@ -12,6 +12,8 @@ class Player(pygame.sprite.Sprite):
         self.image = self.get_image(0, 0)  # Récupérer la première image du sprite
         self.PV=100
         self.VieMax=100
+        self.Endurance=100
+        self.VieEndurance=100
         self.last_touched_time = 0 
 
         # Dictionnaire contenant les animations pour chaque direction
